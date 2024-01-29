@@ -6,6 +6,14 @@ Datasheet: https://static.garmin.com/pumac/LIDAR-Lite_v3HP_Instructions_EN.pdf
 
 Remember to add a 680uf capacitor across the power and ground pins of the sensor.
 If using multiple I2C devices, remember to use pull-up resistors on the SDA and SCL lines.
+
+Wiring:
+
+Blue wire: SDA
+Green wire: SCL
+Black wire: GND
+Red wire: 5V
+
 '''
 
 
@@ -117,7 +125,7 @@ class V3HP:
         # left shift by one to work around data alignment issue in v3HP
         databytes[0] = address << 1
         self.write(0x1a,databytes)
-        # Enable the new I2C device address using the default I2C device address
+        # Enable the new I2C device address
         self.address = address
         databytes = bytearray(self.read(0x1e,1))
         databytes[0] = databytes[0] | 1 << 4
