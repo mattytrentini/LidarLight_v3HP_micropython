@@ -115,8 +115,8 @@ class V3HP:
         self.write(0x18,databytes)
         # Write the new I2C device address to registers
         # left shift by one to work around data alignment issue in v3HP
-        databytes[0] = (address << 1)
-        self.write(0x1e,databytes)
+        databytes[0] = address << 1
+        self.write(0x1a,databytes)
         # Enable the new I2C device address using the default I2C device address
         self.address = address
         databytes = bytearray(self.read(0x1e,1))
@@ -125,7 +125,7 @@ class V3HP:
         
         if disable_default:
             databytes = bytearray(self.read(0x1e,1))
-            databytes[0] = databytes[0] | 1 << 4
+            databytes[0] = databytes[0] | 1 << 3
             self.write(0x1e,databytes)
         
     def read_distance(self)->int:
