@@ -4,6 +4,8 @@ Date: Jan 2024
 Reference: https://github.com/garmin/LIDARLite_Arduino_Library/blob/master/src/LIDARLite_v3HP.cpp
 Datasheet: https://static.garmin.com/pumac/LIDAR-Lite_v3HP_Instructions_EN.pdf
 
+Remember to add a 680uf capacitor across the power and ground pins of the sensor.
+If using multiple I2C devices, remember to use pull-up resistors on the SDA and SCL lines.
 '''
 
 
@@ -13,7 +15,7 @@ from time import sleep_us
 
 
 class V3HP:
-    def __init__(self,mode=0, i2c=I2C(1,scl=Pin(7),sda=Pin(6),freq=200000)):
+    def __init__(self,mode=0, i2c=I2C(1,scl=Pin(7),sda=Pin(6),freq=400000)):
         
         self.i2c = i2c
         sleep_us(80) # sleep for 80 microseconds to allow i2c to settle
@@ -100,13 +102,13 @@ class V3HP:
         '''
         address: desired secondary I2C device address
         
-        disable_default: a non-zero or True value here means the default 0x62 I2C device
-        address will be disabled.  A zero or False value here means the default 0x62
+        disable_default: a  True value here means the default 0x62 I2C device
+        address will be disabled.  A False value here means the default 0x62
         address will remain enabled.  The default is False.
         Do this with caution.  The new address will be saved in EEPROM and will
         continue to be used after reset/power cycle.
         
-        Default address is 0x62 (98).
+        Default address is 0x62 .
         '''
         #  Read UNIT_ID serial number bytes and write them into I2C_ID byte locations
         databytes = bytearray(self.read(0x16,2))
