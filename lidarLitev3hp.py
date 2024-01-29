@@ -13,6 +13,7 @@ Blue wire: SDA
 Green wire: SCL
 Black wire: GND
 Red wire: 5V
+10k pull-up resistors on SDA and SCL lines
 
 '''
 
@@ -185,8 +186,31 @@ class V3HP:
         val = self.i2c.readfrom_mem(self.address,register,bytes)
         
         return val
-       
-    def range_single(self)->int:
+    
+    def reset_reference_filter(self)->None:
+        '''
+        Quickly resets the reference filter to improve the accuracy of initial measurements. Not necessary, usually will rectify itself after a few measurements.
+        '''
+        
+        
+        databytes = bytearray(self.read(0x04,1))            # read the current value of the acquisition configuration register
+        acq_config_reg = databytes[0]                       # store the current value of the acquisition configuration register
+        databytes[0] = databytes[0] | 0x10                  # disable reference filter
+        self.write(0x12,databytes)                          # write the new value to the acquisition configuration register   
+        databytes = bytearray(self.read(0x12,1))            # read ref integration count
+        refCountMax = databytes[0]                          # store the current value of the ref integration count
+        databytes[0] = 0xff                                 # reference to overflow faster
+        self.write(0x12,databytes)                          # write the new value to the ref integration count
+        
+        # Take a range measurement
+        self.range()
+        
+        databytes[0] = refCountMax                           # restore the original value of the ref integration count
+        self.write(0x12,databytes)                           # write the new value to the ref integration count
+        databytes[0] = acq_config_reg                        # restore the original value of the acquisition configuration register
+        self.write(0x04,databytes)                           # write the new value to the acquisition configuration register
+        
+    def range(self)->int:
         '''
         takes a single range measurement and returns the result in centimeters, most accurate.
         stable around 280 measurements per second on pi pico
@@ -196,7 +220,7 @@ class V3HP:
         self.wait_for_busy()
         return self.read_distance()
     
-    def distance_fast(self)->int:
+    def range_fast(self)->int:
         '''
         takes a single range measurement and returns the result in centimeters,
         but does not check to see if the measurement is complete.  The result may be

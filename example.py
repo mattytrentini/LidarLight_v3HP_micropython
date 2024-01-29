@@ -10,7 +10,7 @@ start = time.ticks_ms()
 
 # range_single is reliable at around 280 measurements per second on pi pico
 for i in range(280):
-    dist = lidar.range_single()
+    dist = lidar.range()
     #print(dist)
 
 print("Single Time: ", time.ticks_ms() - start)
@@ -19,7 +19,8 @@ start = time.ticks_ms()
 
 # distance_fast is reliable around 330 measurements per second on pi pico
 for i in range(330):
-    dist = lidar.distance_fast()
+    dist = lidar.range_fast()
     #print(dist)
 
 print("Fast Time: ", time.ticks_ms() - start)
+

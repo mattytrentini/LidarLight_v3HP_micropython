@@ -10,14 +10,14 @@ from machine import I2C, Pin
 from lidarLitev3hp import V3HP
 
 i2c = I2C(1, scl=Pin(7), sda=Pin(6), freq=400000)
-            # mode, i2c
+# Class is initialized with the mode, and the i2c object
 lidar = V3HP( 0 ,   i2c)
 
-# Single measurement, most accurate method
-distance = lidar.range_single()
+# Single measurement, most accurate
+distance = lidar.range()
 
-# Single measurement, fast method, less accurate
-distance = lidar.distance_fast()
+# Single measurement, fast method, potentially less accurate
+distance = lidar.range_fast()
 ```
 
 ## Modes
@@ -36,4 +36,4 @@ distance = lidar.distance_fast()
 
     6: Short range, high speed, higher error. Overrides default valid measurement
 
-### On the pi pico, I was able to get a reliable 330 measurements per second using mode 1 with fast distance method, and 280 measurements per second using mode 1 with range_single method.
+### On the pi pico, I was able to get a reliable 330 measurements per second using mode 1 with range_fast method, and 280 measurements per second using mode 1 with the standard range method.
