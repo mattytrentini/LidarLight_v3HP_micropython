@@ -24,12 +24,12 @@ from time import sleep_us
 
 
 class V3HP:
-    def __init__(self,mode=0, i2c=I2C(1,scl=Pin(7),sda=Pin(6),freq=400000)):
+    def __init__(self,mode=0, i2c=I2C(1,scl=Pin(7),sda=Pin(6),freq=400000),address = 0x62):
         
         self.i2c = i2c
         sleep_us(80) # sleep for 80 microseconds to allow i2c to settle
         
-        self.address = 0x62
+        self.address = address
         self.sig_count_max = 0x80
         self.acq_config_reg = 0x08
         self.ref_count_max = 0x05
@@ -189,7 +189,7 @@ class V3HP:
     
     def reset_reference_filter(self)->None:
         '''
-        Quickly resets the reference filter to improve the accuracy of initial measurements. Not necessary, usually will rectify itself after a few measurements.
+        Quickly resets the reference filter to improve the accuracy of initial measurements. Not normally necessary, usually will rectify itself after a few hundred measurements.
         '''
         
         
