@@ -1,0 +1,7 @@
+{
+  "urls": [
+    ["lidarLitev3hp.py", "github:jdesbonnet/LidarLight_v3HP_micropython/lidarLitev3hp.py"]
+  ],
+  "version": "1.0.0",
+  "deps": []
+}
